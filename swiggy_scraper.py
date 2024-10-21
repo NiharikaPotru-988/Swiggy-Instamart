@@ -10,7 +10,7 @@ options = webdriver.ChromeOptions()
 options.add_argument("--headless")  # Run in headless mode (without opening a browser window)
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-# Swiggy Instamart URL (replace with actual category URLs if needed)
+# Swiggy Instamart URL
 url = 'https://www.swiggy.com/instamart/'
 
 # Visit the Swiggy Instamart page
@@ -32,55 +32,94 @@ data = {
     "products": []
 }
 
-# Example: Parsing categories and subcategories (adjust based on actual page structure)
-categories = soup.find_all('div', class_='category-class')  # Adjust the selector for categories
-for idx, category in enumerate(categories):
-    category_name = category.find('h2').text.strip()  # Adjust to get category name
-    subcategories = category.find_all('div', class_='subcategory-class')  # Adjust selector for subcategories
-    
-    subcat_data = []
-    for sub_idx, subcategory in enumerate(subcategories):
-        subcat_name = subcategory.text.strip()
-        subcat_data.append({
-            "_id": sub_idx + 1,
-            "name": subcat_name
-        })
-    
+# Define the categories of interest directly
+categories_of_interest = ["Fresh Vegetables", "Fruits"]
+
+# Define example categories and products
+example_categories = {
+    "Fresh Vegetables": [
+        {
+            "_id": 1,
+            "name": "Carrots",
+            "subcategories": [
+                {"_id": 1, "name": "Organic Carrots"},
+                {"_id": 2, "name": "Regular Carrots"}
+            ]
+        },
+        {
+            "_id": 2,
+            "name": "Tomatoes",
+            "subcategories": [
+                {"_id": 1, "name": "Cherry Tomatoes"},
+                {"_id": 2, "name": "Regular Tomatoes"}
+            ]
+        }
+    ],
+    "Fruits": [
+        {
+            "_id": 1,
+            "name": "Apples",
+            "subcategories": [
+                {"_id": 1, "name": "Fuji Apples"},
+                {"_id": 2, "name": "Gala Apples"}
+            ]
+        },
+        {
+            "_id": 2,
+            "name": "Bananas",
+            "subcategories": [
+                {"_id": 1, "name": "Organic Bananas"},
+                {"_id": 2, "name": "Regular Bananas"}
+            ]
+        }
+    ]
+}
+
+# Populate categories directly
+for idx, (category_name, subcategories) in enumerate(example_categories.items()):
     data["categories"].append({
         "_id": idx + 1,
         "name": category_name,
-        "subcategories": subcat_data
+        "subcategories": subcategories
     })
 
-# Example: Parsing product information (adjust selectors based on actual structure)
-products = soup.find_all('div', class_='product-class')  # Adjust selector for products
+# Example: Parsing product information (with hypothetical class names)
+products = soup.find_all('div', class_='sc-1f5f3kl-0 iAykPa')  # Replace with the actual product class name
 for prod_idx, product in enumerate(products):
-    product_name = product.find('h3', class_='product-title-class').text.strip()  # Adjust selector
-    product_url = product.find('a', class_='product-link-class')['href']  # Adjust selector
-    image_url = product.find('img', class_='product-image-class')['src']  # Adjust selector
-    price = float(product.find('span', class_='price-class').text.strip())  # Adjust selector
-    measurement_value = product.find('span', class_='measurement-class').text.strip()  # Adjust selector
+    product_name = product.find('h3', class_='sc-1s5afm4-0 hcrqyz').text.strip()  # Replace with the actual product title class name
+    product_url = product.find('a', class_='sc-1f5f3kl-2 cfrSOg')['href']  # Replace with the actual product link class name
+    image_url = product.find('img', class_='sc-1s5afm4-1 iZuZKz')['src']  # Replace with the actual product image class name
+    price = float(product.find('span', class_='sc-1s5afm4-2 iCfqbH').text.strip().replace('₹', '').replace(',', '').strip())  # Replace with the actual price class name
+    measurement_value = product.find('span', class_='sc-1s5afm4-3 hMrCyb').text.strip()  # Replace with the actual measurement class name
+
+    # Determine subcategory ID based on product name and subcategory matches
+    subcategory_id = None
+    for category in data["categories"]:
+        for subcategory in category["subcategories"]:
+            if subcategory["name"].lower() in product_name.lower():
+                subcategory_id = subcategory["_id"]
+                break
+        if subcategory_id:
+            break
     
-    # Example subcategory ID (you'll need to adjust this based on actual data structure)
-    subcategory_id = 6  # Adjust as necessary
-    
-    # Add to product list
-    data["products"].append({
-        "_id": prod_idx + 1,
-        "name": product_name,
-        "product_url": product_url,
-        "image_url": image_url,
-        "price": price,
-        "measurement": {
-            "value": measurement_value,
-            "unit": "Pcs"  # Adjust based on actual product data
-        },
-        "manufacturer": "Eco Farms",  # Adjust based on actual scraped data
-        "subcategory_id": subcategory_id
-    })
+    # Add to product list only if it's from the selected categories
+    if subcategory_id is not None:
+        data["products"].append({
+            "_id": prod_idx + 1,
+            "name": product_name,
+            "product_url": product_url,
+            "image_url": image_url,
+            "price": price,
+            "measurement": {
+                "value": measurement_value,
+                "unit": "Pcs"  # Adjust based on actual product data
+            },
+            "manufacturer": "Eco Farms",  # Adjust based on actual scraped data
+            "subcategory_id": subcategory_id
+        })
 
 # Write the data to a JSON file
-with open('instamart_products.json', 'w') as outfile:
+with open('instamart_fresh_vegetables_fruits.json', 'w') as outfile:
     json.dump(data, outfile, indent=4)
 
-print("Scraping complete! Data saved to instamart_products.json")
+print("Scraping complete! Data saved to instamart_fresh_vegetables_fruits.json")
