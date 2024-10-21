@@ -1,33 +1,48 @@
 {
-  "categories": [
-    {
-      "_id": 1,
-      "name": "Vegetables",
-      "subcategories": [
+    "categories": [
         {
-          "_id": 1,
-          "name": "organic"
+            "_id": 1,
+            "name": "Fresh Vegetables",
+            "subcategories": [
+                {"_id": 1, "name": "Organic Carrots"},
+                {"_id": 2, "name": "Regular Carrots"}
+            ]
         },
         {
-          "_id": 2,
-          "name": "regular"
+            "_id": 2,
+            "name": "Fruits",
+            "subcategories": [
+                {"_id": 1, "name": "Fuji Apples"},
+                {"_id": 2, "name": "Gala Apples"}
+            ]
         }
-      ]
-    }
-  ],
-  "products": [
-    {
-      "_id": 1,
-      "name": "Johnson's Baby Soap",
-      "product_url": "https://www.swiggy.com/product/johnsonsbaby-soap100grms/",
-      "image_url": "https://www.swiggy.com/product/johnsonsbaby-soap100grms/image.png",
-      "price": 83.5,
-      "measurement": {
-        "value": 2,
-        "unit": "Pcs"
-      },
-      "manufacturer": "Eco Farms",
-      "subcategory_id": 1
-    }
-  ]
+    ],
+    "products": [
+        {
+            "_id": 1,
+            "name": "Organic Carrots",
+            "product_url": "https://www.swiggy.com/instamart/organic-carrots",
+            "image_url": "https://www.swiggy.com/images/organic_carrot.jpg",
+            "price": 50.00,
+            "measurement": {
+                "value": "1 Kg",
+                "unit": "Kg"
+            },
+            "manufacturer": "Eco Farms",
+            "subcategory_id": 1
+        },
+        {
+            "_id": 2,
+            "name": "Fuji Apples",
+            "product_url": "https://www.swiggy.com/instamart/fuji-apples",
+            "image_url": "https://www.swiggy.com/images/fuji_apple.jpg",
+            "price": 120.00,
+            "measurement": {
+                "value": "1 Kg",
+                "unit": "Kg"
+            },
+            "manufacturer": "Eco Farms",
+            "subcategory_id": 2
+        }
+    ]
 }
