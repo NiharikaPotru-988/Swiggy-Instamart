@@ -1,0 +1,33 @@
+{
+  "categories": [
+    {
+      "_id": 1,
+      "name": "Vegetables",
+      "subcategories": [
+        {
+          "_id": 1,
+          "name": "organic"
+        },
+        {
+          "_id": 2,
+          "name": "regular"
+        }
+      ]
+    }
+  ],
+  "products": [
+    {
+      "_id": 1,
+      "name": "Johnson's Baby Soap",
+      "product_url": "https://www.swiggy.com/product/johnsonsbaby-soap100grms/",
+      "image_url": "https://www.swiggy.com/product/johnsonsbaby-soap100grms/image.png",
+      "price": 83.5,
+      "measurement": {
+        "value": 2,
+        "unit": "Pcs"
+      },
+      "manufacturer": "Eco Farms",
+      "subcategory_id": 1
+    }
+  ]
+}
